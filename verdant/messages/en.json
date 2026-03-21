@@ -1,0 +1,152 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "goals": "Goals",
+    "spending": "Spending",
+    "settings": "Settings",
+    "assistant": "AI Assistant",
+    "tryDemo": "Try Demo"
+  },
+  "landing": {
+    "headline": "Your finances,\nclearly understood.",
+    "subheadline": "Verdant connects your daily spending to your long-term goals — and brings a financial advisor to every shopping decision.",
+    "cta": "Get started",
+    "demo": "Try with demo data",
+    "features": {
+      "goals": "Track financial goals",
+      "goalsDesc": "See exactly how each purchase affects your timeline.",
+      "ai": "AI-powered guidance",
+      "aiDesc": "Ask questions about your money in plain language.",
+      "extension": "Browser extension",
+      "extensionDesc": "Get real-time insights while you shop."
+    }
+  },
+  "onboarding": {
+    "title": "Set up your profile",
+    "stepIncome": "Income",
+    "stepExpenses": "Expenses",
+    "stepGoals": "Goals",
+    "stepPreferences": "Preferences",
+    "income": {
+      "title": "How do you earn money?",
+      "monthlyNet": "Monthly take-home income",
+      "monthlyNetHelper": "Enter your income after taxes",
+      "incomeType": "Income type",
+      "salary": "Salary",
+      "freelance": "Freelance / Variable",
+      "mixed": "Multiple sources"
+    },
+    "expenses": {
+      "title": "Where does your money go?",
+      "subtitle": "Estimate your monthly spending in each category.",
+      "addCategory": "Add category",
+      "fixed": "Fixed",
+      "variable": "Variable",
+      "remove": "Remove"
+    },
+    "goals": {
+      "title": "What are you saving for?",
+      "subtitle": "Add up to 3 financial goals.",
+      "addGoal": "Add a goal",
+      "goalName": "Goal name",
+      "goalNamePlaceholder": "e.g. Emergency Fund",
+      "targetAmount": "Target amount",
+      "currentAmount": "Amount saved so far",
+      "targetDate": "Target date",
+      "priority": "Priority",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low",
+      "remove": "Remove goal"
+    },
+    "preferences": {
+      "title": "A few last things",
+      "name": "Your first name",
+      "nameHelper": "Used to personalize your experience",
+      "literacyLevel": "Financial literacy level",
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "sustainability": "Sustainability priority",
+      "sustainabilityLow": "Low — focus on savings",
+      "sustainabilityMedium": "Medium — balance both",
+      "sustainabilityHigh": "High — eco-first choices"
+    },
+    "back": "Back",
+    "next": "Next",
+    "finish": "Go to my dashboard",
+    "required": "This field is required"
+  },
+  "dashboard": {
+    "title": "Your Financial Overview",
+    "welcome": "Welcome back, {name}",
+    "monthlyIncome": "Monthly Income",
+    "totalExpenses": "Monthly Expenses",
+    "surplus": "Monthly Surplus",
+    "savingsRate": "Savings Rate",
+    "goalProgress": "Goal Progress",
+    "spendingBreakdown": "Spending Breakdown",
+    "topSpend": "Top spending category",
+    "onTrack": "On track",
+    "behind": "Behind pace",
+    "projectedDate": "Projected by {date}",
+    "noGoals": "No goals set. Add one in settings.",
+    "of": "of"
+  },
+  "goals": {
+    "title": "Financial Goals",
+    "subtitle": "Track your progress toward each goal.",
+    "daysDelayed": "This purchase would delay this goal by ~{days} day(s).",
+    "empty": "No goals yet. Set up your goals during onboarding or in settings."
+  },
+  "spending": {
+    "title": "Spending Breakdown",
+    "subtitle": "Where your money goes each month.",
+    "category": "Category",
+    "amount": "Monthly Amount",
+    "percent": "% of Income",
+    "type": "Type",
+    "fixed": "Fixed",
+    "variable": "Variable",
+    "total": "Total expenses",
+    "noData": "No expenses recorded yet."
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Display Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeHighContrast": "High Contrast",
+    "language": "Language",
+    "profile": "Update Profile",
+    "clearData": "Clear all data",
+    "clearConfirm": "This will delete all your saved data. Are you sure?"
+  },
+  "assistant": {
+    "placeholder": "Ask me anything about your finances…",
+    "suggested1": "Am I on track for my savings goals?",
+    "suggested2": "Where am I overspending?",
+    "suggested3": "How can I reach my goals faster?",
+    "thinking": "Thinking…",
+    "errorMessage": "Something went wrong. Please try again.",
+    "clearHistory": "Clear chat"
+  },
+  "extension": {
+    "analyzing": "Analyzing this product…",
+    "noProduct": "Visit a product page to get spending insights.",
+    "sustainability": "Sustainability",
+    "goalImpact": "Goal Impact",
+    "betterOption": "Better Alternative",
+    "openDashboard": "Open Dashboard",
+    "noProfile": "Connect your Verdant account to see personalized insights."
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "An error occurred.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "currency": "USD"
+  }
+}

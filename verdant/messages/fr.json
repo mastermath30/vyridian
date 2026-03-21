@@ -1,0 +1,152 @@
+{
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "goals": "Objectifs",
+    "spending": "Dépenses",
+    "settings": "Paramètres",
+    "assistant": "Assistant IA",
+    "tryDemo": "Voir la démo"
+  },
+  "landing": {
+    "headline": "Vos finances,\nclairement comprises.",
+    "subheadline": "Verdant relie vos dépenses quotidiennes à vos objectifs financiers et vous accompagne à chaque décision d'achat.",
+    "cta": "Commencer",
+    "demo": "Essayer avec des données de démonstration",
+    "features": {
+      "goals": "Suivi des objectifs",
+      "goalsDesc": "Voyez comment chaque achat affecte votre calendrier.",
+      "ai": "Conseils personnalisés par IA",
+      "aiDesc": "Posez des questions sur vos finances en langage simple.",
+      "extension": "Extension navigateur",
+      "extensionDesc": "Obtenez des informations en temps réel pendant vos achats."
+    }
+  },
+  "onboarding": {
+    "title": "Configurez votre profil",
+    "stepIncome": "Revenus",
+    "stepExpenses": "Dépenses",
+    "stepGoals": "Objectifs",
+    "stepPreferences": "Préférences",
+    "income": {
+      "title": "Comment gagnez-vous de l'argent ?",
+      "monthlyNet": "Revenu mensuel net",
+      "monthlyNetHelper": "Entrez votre revenu après impôts",
+      "incomeType": "Type de revenu",
+      "salary": "Salaire",
+      "freelance": "Freelance / Variable",
+      "mixed": "Plusieurs sources"
+    },
+    "expenses": {
+      "title": "Où va votre argent ?",
+      "subtitle": "Estimez vos dépenses mensuelles par catégorie.",
+      "addCategory": "Ajouter une catégorie",
+      "fixed": "Fixe",
+      "variable": "Variable",
+      "remove": "Supprimer"
+    },
+    "goals": {
+      "title": "Pour quoi épargnez-vous ?",
+      "subtitle": "Ajoutez jusqu'à 3 objectifs financiers.",
+      "addGoal": "Ajouter un objectif",
+      "goalName": "Nom de l'objectif",
+      "goalNamePlaceholder": "ex. Fonds d'urgence",
+      "targetAmount": "Montant cible",
+      "currentAmount": "Montant déjà épargné",
+      "targetDate": "Date cible",
+      "priority": "Priorité",
+      "high": "Haute",
+      "medium": "Moyenne",
+      "low": "Basse",
+      "remove": "Supprimer l'objectif"
+    },
+    "preferences": {
+      "title": "Quelques derniers détails",
+      "name": "Votre prénom",
+      "nameHelper": "Utilisé pour personnaliser votre expérience",
+      "literacyLevel": "Niveau de culture financière",
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "advanced": "Avancé",
+      "sustainability": "Priorité développement durable",
+      "sustainabilityLow": "Faible — focus sur l'épargne",
+      "sustainabilityMedium": "Moyenne — équilibre",
+      "sustainabilityHigh": "Haute — choix éco-responsables"
+    },
+    "back": "Retour",
+    "next": "Suivant",
+    "finish": "Voir mon tableau de bord",
+    "required": "Ce champ est obligatoire"
+  },
+  "dashboard": {
+    "title": "Vue d'ensemble financière",
+    "welcome": "Bienvenue, {name}",
+    "monthlyIncome": "Revenu mensuel",
+    "totalExpenses": "Dépenses mensuelles",
+    "surplus": "Excédent mensuel",
+    "savingsRate": "Taux d'épargne",
+    "goalProgress": "Progression des objectifs",
+    "spendingBreakdown": "Répartition des dépenses",
+    "topSpend": "Catégorie principale",
+    "onTrack": "En bonne voie",
+    "behind": "En retard",
+    "projectedDate": "Estimé pour {date}",
+    "noGoals": "Aucun objectif. Ajoutez-en un dans les paramètres.",
+    "of": "sur"
+  },
+  "goals": {
+    "title": "Objectifs financiers",
+    "subtitle": "Suivez votre progression vers chaque objectif.",
+    "daysDelayed": "Cet achat retarderait cet objectif d'environ {days} jour(s).",
+    "empty": "Aucun objectif pour l'instant."
+  },
+  "spending": {
+    "title": "Répartition des dépenses",
+    "subtitle": "Où va votre argent chaque mois.",
+    "category": "Catégorie",
+    "amount": "Montant mensuel",
+    "percent": "% du revenu",
+    "type": "Type",
+    "fixed": "Fixe",
+    "variable": "Variable",
+    "total": "Total des dépenses",
+    "noData": "Aucune dépense enregistrée."
+  },
+  "settings": {
+    "title": "Paramètres",
+    "theme": "Thème d'affichage",
+    "themeLight": "Clair",
+    "themeDark": "Sombre",
+    "themeHighContrast": "Contraste élevé",
+    "language": "Langue",
+    "profile": "Mettre à jour le profil",
+    "clearData": "Effacer toutes les données",
+    "clearConfirm": "Ceci supprimera toutes vos données. Êtes-vous sûr(e) ?"
+  },
+  "assistant": {
+    "placeholder": "Posez-moi n'importe quelle question sur vos finances…",
+    "suggested1": "Suis-je en bonne voie pour mes objectifs ?",
+    "suggested2": "Où est-ce que je dépense trop ?",
+    "suggested3": "Comment atteindre mes objectifs plus vite ?",
+    "thinking": "Réflexion en cours…",
+    "errorMessage": "Une erreur s'est produite. Veuillez réessayer.",
+    "clearHistory": "Effacer le chat"
+  },
+  "extension": {
+    "analyzing": "Analyse de ce produit…",
+    "noProduct": "Visitez une page produit pour obtenir des informations.",
+    "sustainability": "Durabilité",
+    "goalImpact": "Impact sur les objectifs",
+    "betterOption": "Meilleure alternative",
+    "openDashboard": "Ouvrir le tableau de bord",
+    "noProfile": "Connectez votre compte Verdant pour voir des informations personnalisées."
+  },
+  "common": {
+    "loading": "Chargement…",
+    "error": "Une erreur s'est produite.",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "currency": "USD"
+  }
+}

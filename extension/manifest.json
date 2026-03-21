@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Vyridian — Finance & Sustainability",
+  "version": "1.0.0",
+  "description": "See how any purchase affects your financial goals and get sustainable alternatives — powered by Claude AI.",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": [
+    "http://localhost:*/*",
+    "https://verdant.vercel.app/*",
+    "https://*.amazon.com/*",
+    "https://*.amazon.co.uk/*",
+    "https://*.amazon.ca/*",
+    "https://*.bestbuy.com/*",
+    "https://*.walmart.com/*",
+    "https://*.target.com/*",
+    "https://*.etsy.com/*",
+    "https://*.ebay.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Vyridian",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
