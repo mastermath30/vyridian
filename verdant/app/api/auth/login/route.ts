@@ -9,8 +9,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email and password are required." }, { status: 400 });
     }
 
-    const db = getDb();
-    const user = db.prepare("SELECT * FROM users WHERE email = ?").get(email.toLowerCase().trim()) as any;
+    const sql = getDb();
+    const users = await sql`SELECT * FROM users WHERE email = ${email.toLowerCase().trim()}`;
+    const user = users[0] as any;
     if (!user) {
       return NextResponse.json({ error: "No account found with that email." }, { status: 401 });
     }
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Incorrect password." }, { status: 401 });
     }
 
-    const token = createSession(user.id);
+    const token = await createSession(user.id);
     const res = NextResponse.json({
       success: true,
       user: { id: user.id, firstName: user.first_name, lastName: user.last_name, email: user.email },

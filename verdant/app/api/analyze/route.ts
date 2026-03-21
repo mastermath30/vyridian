@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+
+export const maxDuration = 30;
 import type { ProductAnalysisRequest, ProductAnalysisResponse } from "@/types";
 import { getCategoryBenchmark, buildCategoryContext } from "@/lib/product-dataset";
 

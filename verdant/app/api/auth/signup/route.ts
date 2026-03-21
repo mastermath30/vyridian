@@ -20,18 +20,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid email address." }, { status: 400 });
     }
 
-    const db = getDb();
-    const existing = db.prepare("SELECT id FROM users WHERE email = ?").get(email.toLowerCase().trim());
-    if (existing) {
+    const sql = getDb();
+    const existing = await sql`SELECT id FROM users WHERE email = ${email.toLowerCase().trim()}`;
+    if (existing.length > 0) {
       return NextResponse.json({ error: "An account with this email already exists." }, { status: 409 });
     }
 
     const passwordHash = await hashPassword(password);
-    const result = db.prepare(
-      "INSERT INTO users (first_name, last_name, username, email, password_hash) VALUES (?, ?, ?, ?, ?)"
-    ).run(firstName.trim(), lastName.trim(), username?.trim() || null, email.toLowerCase().trim(), passwordHash);
+    const result = await sql`
+      INSERT INTO users (first_name, last_name, username, email, password_hash)
+      VALUES (${firstName.trim()}, ${lastName.trim()}, ${username?.trim() || null}, ${email.toLowerCase().trim()}, ${passwordHash})
+      RETURNING id
+    `;
 
-    const token = createSession(result.lastInsertRowid as number);
+    const token = await createSession(result[0].id as number);
 
     const res = NextResponse.json({ success: true });
     res.cookies.set(SESSION_COOKIE, token, {
