@@ -22,11 +22,16 @@ function ProductReportInner() {
   const isDark = theme !== "light";
   const tooltipStyle = {
     background: isDark ? "#111111" : "#ffffff",
-    border: `1px solid ${isDark ? "#1e1e1e" : "#e2e6ec"}`,
+    border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "#e2e6ec"}`,
     borderRadius: "10px",
     fontSize: "0.8125rem",
     color: isDark ? "#ffffff" : "#0f1520",
+    padding: "10px 14px",
+    boxShadow: isDark ? "0 4px 24px rgba(0,0,0,0.8)" : "0 4px 12px rgba(0,0,0,0.08)",
   };
+  const tooltipLabelStyle = { color: isDark ? "#a1a1aa" : "#6b7280", marginBottom: "4px" };
+  const tooltipItemStyle = { color: isDark ? "#ffffff" : "#111827" };
+  const tooltipWrapperStyle = { outline: "none", filter: "none" };
 
   const product = searchParams.get("product") ?? "";
   const price = parseFloat(searchParams.get("price") ?? "0");
@@ -306,7 +311,26 @@ function ProductReportInner() {
         </Link>
 
         {/* Product header */}
-        <div className="card" style={{ padding: "1.5rem 2rem", marginBottom: "1.5rem" }}>
+        <div
+          className="card"
+          style={{
+            padding: "1.75rem 2rem",
+            marginBottom: "1.5rem",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* Top accent line */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "2px",
+              background: "linear-gradient(90deg, var(--color-accent) 0%, transparent 80%)",
+            }}
+          />
           <div
             style={{
               display: "flex",
@@ -693,30 +717,33 @@ function ProductReportInner() {
           {a && surplus > 0 && (
             <div
               className="card"
-              style={{ padding: "1.5rem", gridColumn: "1 / -1" }}
+              style={{ padding: "1.5rem 2rem", gridColumn: "1 / -1" }}
             >
-              <p
-                style={{
-                  fontSize: "0.6875rem",
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  color: "var(--color-text-muted)",
-                  marginBottom: "0.25rem",
-                }}
-              >
-                Savings Impact: Original vs. Alternative
-              </p>
-              <p
-                style={{
-                  fontSize: "0.875rem",
-                  color: "var(--color-text-secondary)",
-                  marginBottom: "1.25rem",
-                }}
-              >
-                12-month projected savings comparison
-              </p>
-              <ResponsiveContainer width="100%" height={220}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem", marginBottom: "1.5rem" }}>
+                <div>
+                  <p style={{ fontSize: "0.6875rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-text-muted)", marginBottom: "0.25rem" }}>
+                    12-Month Savings Projection
+                  </p>
+                  <p style={{ fontSize: "1rem", fontWeight: 700, color: "var(--color-text-primary)", letterSpacing: "-0.02em" }}>
+                    3-Scenario Comparison
+                  </p>
+                </div>
+                <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                  {[
+                    { color: "#00d47f", label: "Without purchase", dash: false },
+                    { color: "#ef4444", label: "Buy original", dash: true },
+                    { color: "#3b82f6", label: "Buy alternative", dash: true },
+                  ].map(({ color, label, dash }) => (
+                    <div key={label} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                      <svg width="20" height="10" aria-hidden>
+                        <line x1="0" y1="5" x2="20" y2="5" stroke={color} strokeWidth="2" strokeDasharray={dash ? "4 2" : "none"} />
+                      </svg>
+                      <span style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)" }}>{label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <ResponsiveContainer width="100%" height={260}>
                 <AreaChart data={comparisonData}>
                   <defs>
                     <linearGradient id="gradWithout" x1="0" y1="0" x2="0" y2="1">
@@ -742,13 +769,14 @@ function ProductReportInner() {
                   <Tooltip
                     formatter={(v: number, name: string) => [`$${v.toLocaleString()}`, name]}
                     contentStyle={tooltipStyle}
-                    wrapperStyle={{ outline: "none" }}
+                    wrapperStyle={tooltipWrapperStyle}
+                    labelStyle={tooltipLabelStyle}
+                    itemStyle={tooltipItemStyle}
                     cursor={{ fill: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)" }}
                   />
-                  <Legend formatter={v => <span style={{ color: "var(--color-text-secondary)", fontSize: "12px" }}>{v}</span>} />
-                  <Area type="monotone" dataKey="Without purchase" stroke="#00d37f" strokeWidth={2} fill="url(#gradWithout)" dot={false} />
-                  <Area type="monotone" dataKey="Original product" stroke="#ef4444" strokeWidth={2} fill="url(#gradOriginal)" dot={false} strokeDasharray="4 2" />
-                  <Area type="monotone" dataKey="Better alternative" stroke="#3b82f6" strokeWidth={2} fill="url(#gradAlternative)" dot={false} strokeDasharray="2 2" />
+                  <Area type="monotone" dataKey="Without purchase" stroke="#00d47f" strokeWidth={2.5} fill="url(#gradWithout)" dot={false} activeDot={{ r: 5, strokeWidth: 0, fill: "#00d47f" }} />
+                  <Area type="monotone" dataKey="Original product" stroke="#ef4444" strokeWidth={2} fill="url(#gradOriginal)" dot={false} strokeDasharray="5 3" activeDot={{ r: 4, strokeWidth: 0, fill: "#ef4444" }} />
+                  <Area type="monotone" dataKey="Better alternative" stroke="#3b82f6" strokeWidth={2} fill="url(#gradAlternative)" dot={false} strokeDasharray="3 2" activeDot={{ r: 4, strokeWidth: 0, fill: "#3b82f6" }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

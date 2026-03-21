@@ -60,7 +60,11 @@ export default function Navbar() {
   function switchLocale(locale: Locale) {
     const segments = pathname.split("/");
     segments[1] = locale;
-    try { localStorage.setItem("verdant_locale", locale); } catch {}
+    try {
+      localStorage.setItem("verdant_locale", locale);
+      // Set NEXT_LOCALE cookie so next-intl middleware persists locale across refreshes
+      document.cookie = `NEXT_LOCALE=${locale};path=/;max-age=31536000;SameSite=Lax`;
+    } catch {}
     if (profile) setProfile({ ...profile, language: locale });
     router.push(segments.join("/"));
   }

@@ -64,12 +64,16 @@ export default function FinanceCharts({ profile }: Props) {
   const isDark = theme !== "light";
   const tooltipStyle = {
     background: isDark ? "#111111" : "#ffffff",
-    border: `1px solid ${isDark ? "#1e1e1e" : "#e2e6ec"}`,
+    border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "#e2e6ec"}`,
     borderRadius: "10px",
     fontSize: "0.8125rem",
     color: isDark ? "#ffffff" : "#0f1520",
-    boxShadow: isDark ? "0 4px 20px rgba(0,0,0,0.7)" : "0 4px 12px rgba(0,0,0,0.08)",
+    padding: "10px 14px",
+    boxShadow: isDark ? "0 4px 24px rgba(0,0,0,0.8)" : "0 4px 12px rgba(0,0,0,0.08)",
   };
+  const tooltipLabelStyle = { color: isDark ? "#a1a1aa" : "#6b7280", marginBottom: "4px" };
+  const tooltipItemStyle = { color: isDark ? "#ffffff" : "#111827" };
+  const tooltipWrapperStyle = { outline: "none", filter: "none" };
   const cursorStyle = { fill: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)" };
 
   const spendingData = profile.expenses.map(e => ({ name: e.name, value: e.monthlyEstimate }));
@@ -143,7 +147,7 @@ export default function FinanceCharts({ profile }: Props) {
                       <Cell key={i} fill={COLORS[i % COLORS.length]} stroke="var(--color-bg)" strokeWidth={2} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(v: number) => [`$${v}`, "Amount"]} contentStyle={tooltipStyle} wrapperStyle={{ outline: "none" }} cursor={cursorStyle} />
+                  <Tooltip formatter={(v: number) => [`$${v}`, "Amount"]} contentStyle={tooltipStyle} wrapperStyle={tooltipWrapperStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={cursorStyle} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="flex flex-col gap-2">
@@ -193,7 +197,9 @@ export default function FinanceCharts({ profile }: Props) {
                     <Tooltip
                       formatter={(v: number, name: string) => [`$${v.toLocaleString()}/mo`, name]}
                       contentStyle={tooltipStyle}
-                      wrapperStyle={{ outline: "none" }}
+                      wrapperStyle={tooltipWrapperStyle}
+                      labelStyle={tooltipLabelStyle}
+                      itemStyle={tooltipItemStyle}
                       cursor={cursorStyle}
                     />
                     <Legend formatter={v => <span style={{ color: "var(--color-text-secondary)", fontSize: "12px" }}>{v}</span>} />
@@ -220,7 +226,7 @@ export default function FinanceCharts({ profile }: Props) {
                 <CartesianGrid vertical={false} stroke="var(--color-border)" />
                 <XAxis dataKey="month" tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tickFormatter={formatK} tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
-                <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, ""]} contentStyle={tooltipStyle} wrapperStyle={{ outline: "none" }} cursor={cursorStyle} />
+                <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, ""]} contentStyle={tooltipStyle} wrapperStyle={tooltipWrapperStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={cursorStyle} />
                 <Legend formatter={v => <span style={{ color: "var(--color-text-secondary)", fontSize: "12px" }}>{v}</span>} />
                 <Bar dataKey="income" name="Income" fill="#00d37f" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="expenses" name="Expenses" fill="#ef4444" radius={[4, 4, 0, 0]} opacity={0.8} />
@@ -243,7 +249,7 @@ export default function FinanceCharts({ profile }: Props) {
                   <CartesianGrid horizontal={false} stroke="var(--color-border)" />
                   <XAxis type="number" tickFormatter={formatK} tick={{ fill: "var(--color-text-muted)", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis type="category" dataKey="name" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} axisLine={false} tickLine={false} width={90} />
-                  <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, ""]} contentStyle={tooltipStyle} wrapperStyle={{ outline: "none" }} cursor={cursorStyle} />
+                  <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, ""]} contentStyle={tooltipStyle} wrapperStyle={tooltipWrapperStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={cursorStyle} />
                   <Bar dataKey="saved" name="Saved" stackId="a" fill="#00d37f" radius={[0, 0, 0, 4]} />
                   <Bar dataKey="remaining" name="Remaining" stackId="a" fill="var(--color-border)" radius={[0, 4, 4, 0]} />
                 </BarChart>
@@ -269,7 +275,7 @@ export default function FinanceCharts({ profile }: Props) {
                 <CartesianGrid vertical={false} stroke="var(--color-border)" />
                 <XAxis dataKey="month" tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tickFormatter={formatK} tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
-                <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, "Cumulative savings"]} contentStyle={tooltipStyle} wrapperStyle={{ outline: "none" }} cursor={cursorStyle} />
+                <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, "Cumulative savings"]} contentStyle={tooltipStyle} wrapperStyle={tooltipWrapperStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={cursorStyle} />
                 <Area type="monotone" dataKey="savings" stroke="#00d37f" strokeWidth={2.5} fill="url(#savingsGrad)" dot={false} />
               </AreaChart>
             </ResponsiveContainer>
