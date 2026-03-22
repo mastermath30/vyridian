@@ -236,6 +236,14 @@ export default function Navbar() {
                   href={href}
                   className="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
                   style={{ color: "var(--color-text-secondary)" }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.color = "var(--color-text-primary)";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.color = "var(--color-text-secondary)";
+                    (e.currentTarget as HTMLElement).style.background = "transparent";
+                  }}
                   onClick={() => setMenuOpen(false)}
                 >
                   {label}

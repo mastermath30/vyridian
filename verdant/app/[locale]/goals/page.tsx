@@ -31,13 +31,16 @@ export default function GoalsPage() {
   return (
     <div style={{ background: "var(--color-bg)", minHeight: "100vh" }}>
       <Navbar />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-        <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--color-text-primary)" }}>
-          {t("title")}
-        </h1>
-        <p className="text-sm mb-7" style={{ color: "var(--color-text-secondary)" }}>
-          {t("subtitle")}
-        </p>
+      <main className="max-w-3xl mx-auto px-4 sm:px-6" style={{ paddingTop: "5.5rem", paddingBottom: "3rem" }}>
+        <div className="mb-8">
+          <p className="text-xs font-bold mb-1.5" style={{ color: "var(--color-blue)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Goals</p>
+          <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--color-text-primary)", letterSpacing: "-0.025em" }}>
+            {t("title")}
+          </h1>
+          <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
+            {t("subtitle")}
+          </p>
+        </div>
 
         {profile.goals.length === 0 ? (
           <div

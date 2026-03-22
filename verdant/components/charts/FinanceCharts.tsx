@@ -107,11 +107,24 @@ export default function FinanceCharts({ profile }: Props) {
   const incomeExpData = buildIncomeVsExpenses(metrics.monthlyIncome, metrics.totalExpenses, locale);
 
   return (
-    <div className="card" style={{ padding: "1.5rem" }}>
+    <div
+      style={{
+        background: "var(--color-surface)",
+        border: "1px solid var(--color-border)",
+        borderRadius: "var(--radius-lg)",
+        padding: "1.5rem",
+        boxShadow: "var(--shadow-sm)",
+      }}
+    >
       {/* Tab bar */}
       <div
-        className="flex gap-1 mb-6 p-1 rounded-xl overflow-x-auto"
-        style={{ background: "var(--color-bg)", width: "fit-content" }}
+        className="flex gap-0.5 mb-6 p-1 overflow-x-auto"
+        style={{
+          background: "var(--color-bg)",
+          borderRadius: "var(--radius-md)",
+          width: "fit-content",
+          border: "1px solid var(--color-border)",
+        }}
         role="tablist"
         aria-label="Chart type"
       >
@@ -123,11 +136,15 @@ export default function FinanceCharts({ profile }: Props) {
             onClick={() => setActiveTab(id)}
             className="btn btn-sm"
             style={{
-              background: activeTab === id ? "var(--color-accent)" : "transparent",
+              background: activeTab === id
+                ? "linear-gradient(135deg, var(--color-accent) 0%, #00b870 100%)"
+                : "transparent",
               color: activeTab === id ? "#000" : "var(--color-text-secondary)",
               border: "none",
               fontWeight: activeTab === id ? 700 : 500,
               whiteSpace: "nowrap",
+              boxShadow: activeTab === id ? "0 2px 8px rgba(0,212,127,0.25)" : "none",
+              transition: "all 0.2s var(--ease-smooth)",
             }}
           >
             {label}

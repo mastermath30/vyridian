@@ -68,62 +68,78 @@ export default function LoginPage() {
   return (
     <div style={{ background: "var(--color-bg)", minHeight: "100vh" }}>
       <Navbar />
-      <main className="flex min-h-screen items-center justify-center pt-16 px-6">
-        <div className="w-full max-w-md py-16">
-          <div className="mb-10">
-            <Link href={`/${locale}`} style={{ textDecoration: "none" }}>
+
+      {/* Ambient glow */}
+      <div
+        style={{
+          position: "fixed", top: 0, left: "50%", transform: "translateX(-50%)",
+          width: "600px", height: "400px",
+          background: "radial-gradient(ellipse, rgba(0,212,127,0.06) 0%, transparent 70%)",
+          pointerEvents: "none", zIndex: 0,
+        }}
+        aria-hidden="true"
+      />
+
+      <main className="flex min-h-screen items-center justify-center pt-16 px-6" style={{ position: "relative", zIndex: 1 }}>
+        <div className="w-full max-w-md py-12">
+          <div className="mb-8 text-center">
+            <Link href={`/${locale}`} style={{ textDecoration: "none", display: "inline-block" }}>
               <VyridianWordmark size={30} />
             </Link>
           </div>
 
-          <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--color-text-primary)", letterSpacing: "-0.02em" }}>
-            Welcome back
-          </h1>
-          <p className="text-sm mb-8" style={{ color: "var(--color-text-secondary)" }}>
-            Don&apos;t have an account?{" "}
-            <Link href={`/${locale}/signup`} style={{ color: "var(--color-accent)" }} className="font-medium hover:underline">
-              Sign up free
-            </Link>
-          </p>
+          <div
+            className="card"
+            style={{ padding: "2rem 2rem 2.25rem", boxShadow: "var(--shadow-lg)" }}
+          >
+            <h1 className="text-xl font-bold mb-1" style={{ color: "var(--color-text-primary)", letterSpacing: "-0.02em" }}>
+              Welcome back
+            </h1>
+            <p className="text-sm mb-6" style={{ color: "var(--color-text-secondary)" }}>
+              Don&apos;t have an account?{" "}
+              <Link href={`/${locale}/signup`} style={{ color: "var(--color-accent)" }} className="font-medium hover:underline">
+                Sign up free
+              </Link>
+            </p>
 
-          {error && (
-            <div
-              className="mb-5 px-4 py-3 rounded-xl text-sm font-medium"
-              style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", color: "var(--color-danger)" }}
-              role="alert"
-            >
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
-            <div className="form-group">
-              <label className="form-label" htmlFor="login-email">Email address</label>
-              <input id="login-email" type="email" value={email}
-                onChange={e => { setEmail(e.target.value); setError(""); }}
-                className="input" placeholder="maya@example.com" aria-required="true" />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label" htmlFor="login-password">Password</label>
-              <div className="relative">
-                <input id="login-password" type={showPass ? "text" : "password"} value={password}
-                  onChange={e => { setPassword(e.target.value); setError(""); }}
-                  className="input pr-11" placeholder="Your password" aria-required="true" />
-                <button type="button" onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 btn-icon btn"
-                  style={{ background: "none", border: "none", color: "var(--color-text-muted)" }}
-                  aria-label={showPass ? "Hide password" : "Show password"}>
-                  {showPass ? <EyeOff size={16} aria-hidden /> : <Eye size={16} aria-hidden />}
-                </button>
+            {error && (
+              <div
+                className="mb-5 px-4 py-3 rounded-xl text-sm font-medium"
+                style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", color: "var(--color-danger)" }}
+                role="alert"
+              >
+                {error}
               </div>
-            </div>
+            )}
 
-            <button type="submit" disabled={loading} className="btn btn-primary btn-lg w-full mt-2">
-              {loading ? "Signing in…" : <><span>Sign in</span> <ArrowRight size={18} aria-hidden /></>}
-            </button>
-          </form>
+            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+              <div className="form-group">
+                <label className="form-label" htmlFor="login-email">Email address</label>
+                <input id="login-email" type="email" value={email}
+                  onChange={e => { setEmail(e.target.value); setError(""); }}
+                  className="input" placeholder="maya@example.com" aria-required="true" />
+              </div>
 
+              <div className="form-group">
+                <label className="form-label" htmlFor="login-password">Password</label>
+                <div className="relative">
+                  <input id="login-password" type={showPass ? "text" : "password"} value={password}
+                    onChange={e => { setPassword(e.target.value); setError(""); }}
+                    className="input pr-11" placeholder="Your password" aria-required="true" />
+                  <button type="button" onClick={() => setShowPass(!showPass)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 btn-icon btn"
+                    style={{ background: "none", border: "none", color: "var(--color-text-muted)" }}
+                    aria-label={showPass ? "Hide password" : "Show password"}>
+                    {showPass ? <EyeOff size={16} aria-hidden /> : <Eye size={16} aria-hidden />}
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" disabled={loading} className="btn btn-primary btn-lg w-full mt-2">
+                {loading ? "Signing in…" : <><span>Sign in</span> <ArrowRight size={18} aria-hidden /></>}
+              </button>
+            </form>
+          </div>
         </div>
       </main>
     </div>

@@ -533,16 +533,31 @@ export default function LandingPage() {
 
             {/* Dashboard mockup */}
             <div className="animate-fade-up delay-500 relative">
+              {/* Glow halo behind the mockup */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "20%", left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "70%", height: "60%",
+                  background: "radial-gradient(ellipse, rgba(0,212,127,0.08) 0%, transparent 70%)",
+                  filter: "blur(40px)",
+                  zIndex: 0, pointerEvents: "none",
+                }}
+                aria-hidden="true"
+              />
               <div
                 style={{
                   position: "absolute", bottom: 0, left: 0, right: 0,
-                  height: "100px",
+                  height: "120px",
                   background: "linear-gradient(to bottom, transparent, var(--color-bg))",
                   zIndex: 2, pointerEvents: "none",
                 }}
                 aria-hidden="true"
               />
-              <DashboardPreview />
+              <div style={{ position: "relative", zIndex: 1 }}>
+                <DashboardPreview />
+              </div>
             </div>
           </div>
         </section>
@@ -571,7 +586,7 @@ export default function LandingPage() {
               {/* Subtle top glow line */}
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(90deg, transparent, rgba(0,212,127,0.5), transparent)" }} aria-hidden="true" />
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "0" }}>
+              <div className="ext-spotlight-grid" style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "0" }}>
                 {/* Left content */}
                 <div style={{ padding: "3rem 3rem 3rem 3.5rem" }}>
                   <div style={{ display: "inline-flex", alignItems: "center", gap: "7px", background: "rgba(0,212,127,0.1)", border: "1px solid rgba(0,212,127,0.25)", borderRadius: "100px", padding: "4px 12px", marginBottom: "1.75rem" }}>
@@ -628,6 +643,7 @@ export default function LandingPage() {
 
                 {/* Right: popup mockup */}
                 <div
+                  className="ext-spotlight-visual"
                   style={{
                     background: "linear-gradient(135deg, rgba(0,212,127,0.05), rgba(79,142,247,0.03))",
                     borderLeft: "1px solid rgba(255,255,255,0.06)",
@@ -650,13 +666,25 @@ export default function LandingPage() {
           <div className="container mx-auto px-6 max-w-4xl">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 text-center reveal">
               {[
-                { value: "3 min", label: "Average setup time" },
-                { value: "AI", label: "Powered by Claude" },
-                { value: "3", label: "Languages supported" },
-                { value: "6+", label: "Shopping sites supported" },
-              ].map(({ value, label }) => (
+                { value: "3 min", label: "Average setup time", color: "var(--color-accent)" },
+                { value: "Claude", label: "AI-powered advisor", color: "var(--color-blue)" },
+                { value: "3", label: "Languages supported", color: "var(--color-purple)" },
+                { value: "6+", label: "Shopping sites supported", color: "var(--color-warning)" },
+              ].map(({ value, label, color }) => (
                 <div key={label} className="stats-card">
-                  <div className="stat-value mb-1.5" style={{ fontSize: "2rem" }}>{value}</div>
+                  <div
+                    className="mb-1.5"
+                    style={{
+                      fontSize: "1.875rem",
+                      fontWeight: 800,
+                      letterSpacing: "-0.035em",
+                      lineHeight: 1.1,
+                      color,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {value}
+                  </div>
                   <div className="stat-label">{label}</div>
                 </div>
               ))}
@@ -693,8 +721,9 @@ export default function LandingPage() {
                       background: bg,
                       border: `1px solid ${border}`,
                       borderRadius: "14px",
-                      padding: "14px",
-                      marginBottom: "1.25rem",
+                      padding: "16px",
+                      marginBottom: "1.375rem",
+                      minHeight: "80px",
                     }}
                     aria-hidden="true"
                   >
@@ -702,13 +731,20 @@ export default function LandingPage() {
                   </div>
 
                   {/* Color dot + title */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "7px", marginBottom: "0.5rem" }}>
-                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: color, flexShrink: 0, boxShadow: `0 0 8px ${color}80` }} aria-hidden="true" />
-                    <h3 style={{ fontWeight: 700, fontSize: "0.9375rem", letterSpacing: "-0.015em", color: "var(--color-text-primary)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "0.5rem" }}>
+                    <div
+                      style={{
+                        width: 7, height: 7, borderRadius: "50%",
+                        background: color, flexShrink: 0,
+                        boxShadow: `0 0 10px ${color}90`,
+                      }}
+                      aria-hidden="true"
+                    />
+                    <h3 style={{ fontWeight: 700, fontSize: "0.9375rem", letterSpacing: "-0.02em", color: "var(--color-text-primary)" }}>
                       {title}
                     </h3>
                   </div>
-                  <p style={{ fontSize: "0.875rem", lineHeight: "1.65", color: "var(--color-text-secondary)" }}>
+                  <p style={{ fontSize: "0.875rem", lineHeight: "1.7", color: "var(--color-text-secondary)" }}>
                     {desc}
                   </p>
                 </div>

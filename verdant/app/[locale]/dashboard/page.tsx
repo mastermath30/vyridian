@@ -12,7 +12,7 @@ import StatCard from "@/components/ui/StatCard";
 import GoalCard from "@/components/ui/GoalCard";
 import AIAssistant from "@/components/assistant/AIAssistant";
 import FinanceCharts from "@/components/charts/FinanceCharts";
-import { Settings, Plus, DollarSign, Target, TrendingUp, ShoppingCart } from "lucide-react";
+import { Settings, Plus, DollarSign, Target, TrendingUp, ShoppingCart, Lightbulb, PiggyBank, BarChart2 } from "lucide-react";
 import Link from "next/link";
 
 export default function DashboardPage() {
@@ -36,16 +36,9 @@ export default function DashboardPage() {
     return (
       <div style={{ background: "var(--color-bg)", minHeight: "100vh" }}>
         <Navbar />
-        <div className="flex items-center justify-center" style={{ minHeight: "60vh" }}>
-          <div
-            className="animate-spin"
-            style={{
-              width: "28px", height: "28px",
-              border: "2.5px solid var(--color-border)",
-              borderTopColor: "var(--color-accent)",
-              borderRadius: "50%",
-            }}
-          />
+        <div className="flex flex-col items-center justify-center gap-3" style={{ minHeight: "60vh" }}>
+          <div className="spinner" />
+          <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>Loading your dashboard…</p>
         </div>
       </div>
     );
@@ -109,21 +102,26 @@ export default function DashboardPage() {
             {/* What you'll unlock */}
             <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
               {[
-                { icon: DollarSign, label: "Income tracking", desc: "Monthly surplus calculation" },
-                { icon: ShoppingCart, label: "Spending breakdown", desc: "Category-by-category chart" },
-                { icon: Target, label: "Goal progress", desc: "Days until each goal" },
-                { icon: TrendingUp, label: "Savings projection", desc: "12-month savings forecast" },
-              ].map(({ icon: Icon, label, desc }) => (
+                { icon: DollarSign, label: "Income tracking", desc: "Monthly surplus calculation", color: "var(--color-accent)" },
+                { icon: ShoppingCart, label: "Spending breakdown", desc: "Category-by-category chart", color: "var(--color-blue)" },
+                { icon: Target, label: "Goal progress", desc: "Days until each goal", color: "var(--color-purple)" },
+                { icon: TrendingUp, label: "Savings projection", desc: "12-month savings forecast", color: "var(--color-warning)" },
+              ].map(({ icon: Icon, label, desc, color }) => (
                 <div
                   key={label}
                   className="card"
-                  style={{ padding: "1rem", opacity: 0.7 }}
+                  style={{ padding: "1rem 1.125rem", opacity: 0.72, transition: "opacity 0.2s ease, transform 0.2s ease" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = "1"; (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = "0.72"; (e.currentTarget as HTMLElement).style.transform = ""; }}
                 >
                   <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center mb-2"
-                    style={{ background: "var(--color-accent-subtle)" }}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center mb-2.5"
+                    style={{
+                      background: `color-mix(in srgb, ${color} 12%, transparent)`,
+                      border: `1px solid color-mix(in srgb, ${color} 20%, transparent)`,
+                    }}
                   >
-                    <Icon size={14} style={{ color: "var(--color-accent)" }} aria-hidden />
+                    <Icon size={14} style={{ color }} aria-hidden />
                   </div>
                   <p className="text-xs font-semibold mb-0.5" style={{ color: "var(--color-text-primary)" }}>{label}</p>
                   <p className="text-xs" style={{ color: "var(--color-text-muted)", lineHeight: "1.4" }}>{desc}</p>
@@ -162,15 +160,15 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex items-start justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--color-text-primary)", letterSpacing: "-0.02em" }}>
-              {t("welcome", { name: displayName })}
-            </h1>
-            <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
+            <p className="text-xs font-semibold mb-1.5" style={{ color: "var(--color-accent)", letterSpacing: "0.07em", textTransform: "uppercase" }}>
               {t("title")}
             </p>
+            <h1 className="text-2xl font-bold" style={{ color: "var(--color-text-primary)", letterSpacing: "-0.025em" }}>
+              {t("welcome", { name: displayName })}
+            </h1>
           </div>
           <div className="flex items-center gap-2">
-            <Link href={`/${locale}/onboarding`} className="btn btn-sm btn-ghost">
+            <Link href={`/${locale}/onboarding`} className="btn btn-sm btn-secondary">
               <Settings size={14} aria-hidden /> Edit profile
             </Link>
           </div>
@@ -178,33 +176,47 @@ export default function DashboardPage() {
 
         {/* Stats row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-          <StatCard label={t("monthlyIncome")} value={formatCurrency(metrics.monthlyIncome)} />
-          <StatCard label={t("totalExpenses")} value={formatCurrency(metrics.totalExpenses)} trend="down" />
+          <StatCard
+            label={t("monthlyIncome")}
+            value={formatCurrency(metrics.monthlyIncome)}
+            icon={DollarSign}
+            accentColor="var(--color-accent)"
+          />
+          <StatCard
+            label={t("totalExpenses")}
+            value={formatCurrency(metrics.totalExpenses)}
+            trend="down"
+            icon={ShoppingCart}
+            accentColor="var(--color-danger)"
+          />
           <StatCard
             label={t("surplus")}
             value={formatCurrency(metrics.monthlySurplus)}
             sub={surplusPositive ? "▲ Healthy surplus" : "▼ Overspending"}
             trend={surplusPositive ? "up" : "down"}
+            icon={TrendingUp}
+            accentColor={surplusPositive ? "var(--color-accent)" : "var(--color-danger)"}
           />
           <StatCard
             label={t("savingsRate")}
             value={formatPercent(metrics.savingsRate)}
             sub={metrics.savingsRate >= 20 ? "↑ Above 20% target" : "↓ Below 20% target"}
             trend={metrics.savingsRate >= 20 ? "up" : "neutral"}
+            icon={PiggyBank}
+            accentColor={metrics.savingsRate >= 20 ? "var(--color-blue)" : "var(--color-warning)"}
           />
         </div>
 
         {/* Localized insight banner */}
         {dashboardInsight && (
-          <div
-            className="mb-6 px-4 py-3 rounded-xl text-sm flex items-start gap-3"
-            style={{
-              background: "var(--color-accent-subtle)",
-              border: "1px solid var(--color-accent-dim)",
-              color: "var(--color-text-secondary)",
-            }}
-          >
-            <span style={{ fontSize: "1rem", flexShrink: 0 }}>💡</span>
+          <div className="insight-banner mb-6">
+            <div
+              className="flex items-center justify-center flex-shrink-0 rounded-lg"
+              style={{ width: "28px", height: "28px", background: "var(--color-accent-subtle)", border: "1px solid var(--color-accent-dim)" }}
+              aria-hidden
+            >
+              <Lightbulb size={14} style={{ color: "var(--color-accent)" }} />
+            </div>
             <span>{dashboardInsight}</span>
           </div>
         )}
@@ -215,18 +227,24 @@ export default function DashboardPage() {
 
             {/* Charts */}
             <section aria-labelledby="charts-heading">
-              <h2 id="charts-heading" className="text-sm font-semibold mb-3" style={{ color: "var(--color-text-secondary)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                Money Insights
-              </h2>
+              <div className="flex items-center gap-2 mb-3">
+                <BarChart2 size={14} style={{ color: "var(--color-accent)" }} aria-hidden />
+                <h2 id="charts-heading" className="text-xs font-bold" style={{ color: "var(--color-text-secondary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                  Money Insights
+                </h2>
+              </div>
               <FinanceCharts profile={safeProfile} />
             </section>
 
             {/* Goals */}
             <section aria-labelledby="goals-heading">
               <div className="flex items-center justify-between mb-3">
-                <h2 id="goals-heading" className="text-sm font-semibold" style={{ color: "var(--color-text-secondary)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                  {t("goalProgress")}
-                </h2>
+                <div className="flex items-center gap-2">
+                  <Target size={14} style={{ color: "var(--color-blue)" }} aria-hidden />
+                  <h2 id="goals-heading" className="text-xs font-bold" style={{ color: "var(--color-text-secondary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                    {t("goalProgress")}
+                  </h2>
+                </div>
                 <Link href={`/${locale}/goals`} className="btn btn-sm btn-ghost" style={{ fontSize: "0.75rem" }}>
                   View all
                 </Link>
@@ -251,23 +269,26 @@ export default function DashboardPage() {
           {/* AI Assistant + Tip */}
           <div className="lg:col-span-1 flex flex-col gap-6">
             <div>
-              <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--color-text-secondary)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                AI Assistant
-              </h2>
+              <div className="flex items-center gap-2 mb-3">
+                <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--color-purple)", boxShadow: "0 0 8px rgba(139,92,246,0.5)" }} aria-hidden />
+                <h2 className="text-xs font-bold" style={{ color: "var(--color-text-secondary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                  AI Assistant
+                </h2>
+              </div>
               <AIAssistant />
             </div>
 
             {/* Daily Tip */}
             {dailyTip && (
               <div>
-                <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--color-text-secondary)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                  {{ en: "Tip of the Day", es: "Consejo del Día", fr: "Conseil du Jour" }[resolvedLocale]}
-                </h2>
-                <div
-                  className="card p-4"
-                  style={{ borderColor: "var(--color-accent-dim)" }}
-                >
-                  <p className="text-xs" style={{ color: "var(--color-text-secondary)", lineHeight: "1.65" }}>
+                <div className="flex items-center gap-2 mb-3">
+                  <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--color-accent)", boxShadow: "0 0 8px rgba(0,212,127,0.4)" }} aria-hidden />
+                  <h2 className="text-xs font-bold" style={{ color: "var(--color-text-secondary)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                    {{ en: "Tip of the Day", es: "Consejo del Día", fr: "Conseil du Jour" }[resolvedLocale]}
+                  </h2>
+                </div>
+                <div className="tip-card">
+                  <p className="text-xs" style={{ color: "var(--color-text-secondary)", lineHeight: "1.7" }}>
                     🌱 {dailyTip}
                   </p>
                 </div>

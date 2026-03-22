@@ -109,19 +109,29 @@ export default function SignupPage() {
       <main className="flex min-h-screen pt-16">
         {/* Left panel */}
         <div
-          className="hidden lg:flex flex-col justify-center px-16 py-20 flex-1"
+          className="hidden lg:flex flex-col justify-center px-16 py-20 flex-1 relative overflow-hidden"
           style={{ background: "var(--color-bg-alt)", borderRight: "1px solid var(--color-border)" }}
         >
-          <Link href={`/${locale}`} className="mb-14 inline-block" style={{ textDecoration: "none" }}>
+          {/* Subtle background orb */}
+          <div
+            style={{
+              position: "absolute", bottom: "10%", right: "-80px",
+              width: "360px", height: "360px",
+              background: "radial-gradient(ellipse, rgba(0,212,127,0.07) 0%, transparent 70%)",
+              filter: "blur(30px)", pointerEvents: "none",
+            }}
+            aria-hidden="true"
+          />
+          <Link href={`/${locale}`} className="mb-14 inline-block" style={{ textDecoration: "none", position: "relative", zIndex: 1 }}>
             <VyridianWordmark size={30} />
           </Link>
-          <h2 className="display-md mb-4" style={{ color: "var(--color-text-primary)" }}>
+          <h2 className="display-md mb-4" style={{ color: "var(--color-text-primary)", position: "relative", zIndex: 1 }}>
             Take control of your finances
           </h2>
-          <p className="text-base mb-10" style={{ color: "var(--color-text-secondary)", lineHeight: "1.7" }}>
+          <p className="text-base mb-10" style={{ color: "var(--color-text-secondary)", lineHeight: "1.7", position: "relative", zIndex: 1 }}>
             Join Vyridian and get a clear picture of your money, your goals, and your impact.
           </p>
-          <ul className="flex flex-col gap-3">
+          <ul className="flex flex-col gap-3.5" style={{ position: "relative", zIndex: 1 }}>
             {perks.map((perk) => (
               <li key={perk} className="flex items-center gap-3 text-sm" style={{ color: "var(--color-text-secondary)" }}>
                 <CheckCircle size={16} style={{ color: "var(--color-accent)", flexShrink: 0 }} aria-hidden />
