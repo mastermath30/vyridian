@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip,
@@ -13,13 +14,6 @@ import { matchSpendingBenchmark } from "@/lib/product-dataset";
 
 type ChartTab = "spending" | "income-vs-expenses" | "goal-progress" | "projection";
 
-const TABS: { id: ChartTab; label: string }[] = [
-  { id: "spending", label: "Spending" },
-  { id: "income-vs-expenses", label: "Income vs Expenses" },
-  { id: "goal-progress", label: "Goals" },
-  { id: "projection", label: "Projection" },
-];
-
 const COLORS = ["#00d37f", "#3b82f6", "#8b5cf6", "#f59e0b", "#ef4444", "#06b6d4", "#ec4899"];
 
 function formatK(v: number) {
@@ -27,24 +21,24 @@ function formatK(v: number) {
   return `$${v}`;
 }
 
-function buildProjectionData(monthlyNet: number, totalExpenses: number, months = 12) {
+function buildProjectionData(monthlyNet: number, totalExpenses: number, locale: string, months = 12) {
   const surplus = Math.max(monthlyNet - totalExpenses, 0);
   return Array.from({ length: months }, (_, i) => ({
-    month: new Date(Date.now() + i * 30 * 24 * 60 * 60 * 1000).toLocaleDateString("en-US", { month: "short" }),
+    month: new Date(Date.now() + i * 30 * 24 * 60 * 60 * 1000).toLocaleDateString(locale, { month: "short" }),
     savings: surplus * (i + 1),
     expenses: totalExpenses,
     income: monthlyNet,
   }));
 }
 
-function buildIncomeVsExpenses(monthlyNet: number, totalExpenses: number) {
+function buildIncomeVsExpenses(monthlyNet: number, totalExpenses: number, locale: string) {
   // Use deterministic variance seeded by stable values (no Math.random)
   const variance = [0, 0.04, -0.03, 0.06, -0.02, 0.05];
   const expVariance = [0, -0.05, 0.08, -0.04, 0.07, -0.02];
   const now = new Date();
   const months = Array.from({ length: 6 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1);
-    return d.toLocaleDateString("en-US", { month: "short" });
+    return d.toLocaleDateString(locale, { month: "short" });
   });
   return months.map((m, i) => ({
     month: m,
@@ -58,21 +52,32 @@ interface Props {
 }
 
 export default function FinanceCharts({ profile }: Props) {
+  const t = useTranslations("charts");
+  const locale = useLocale();
   const [activeTab, setActiveTab] = useState<ChartTab>("spending");
   const metrics = computeMetrics(profile);
   const { theme } = useApp();
+
+  const TABS: { id: ChartTab; label: string }[] = [
+    { id: "spending",            label: t("tabSpending") },
+    { id: "income-vs-expenses",  label: t("tabIncomeExpenses") },
+    { id: "goal-progress",       label: t("tabGoals") },
+    { id: "projection",          label: t("tabProjection") },
+  ];
   const isDark = theme !== "light";
   const tooltipStyle = {
-    background: isDark ? "#111111" : "#ffffff",
-    border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "#e2e6ec"}`,
+    background: isDark ? "#0c1018" : "#ffffff",
+    border: `1px solid ${isDark ? "rgba(255,255,255,0.10)" : "#e2e6ec"}`,
     borderRadius: "10px",
     fontSize: "0.8125rem",
-    color: isDark ? "#ffffff" : "#0f1520",
+    color: isDark ? "#f0f4f8" : "#0f1520",
     padding: "10px 14px",
-    boxShadow: isDark ? "0 4px 24px rgba(0,0,0,0.8)" : "0 4px 12px rgba(0,0,0,0.08)",
+    boxShadow: isDark
+      ? "0 4px 28px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.06)"
+      : "0 4px 16px rgba(0,0,0,0.10)",
   };
-  const tooltipLabelStyle = { color: isDark ? "#a1a1aa" : "#6b7280", marginBottom: "4px" };
-  const tooltipItemStyle = { color: isDark ? "#ffffff" : "#111827" };
+  const tooltipLabelStyle = { color: isDark ? "#8892a4" : "#6b7280", marginBottom: "4px" };
+  const tooltipItemStyle = { color: isDark ? "#f0f4f8" : "#111827" };
   const tooltipWrapperStyle = { outline: "none", filter: "none" };
   const cursorStyle = { fill: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)" };
 
@@ -98,8 +103,8 @@ export default function FinanceCharts({ profile }: Props) {
     remaining: Math.max(g.targetAmount - g.currentAmount, 0),
     target: g.targetAmount,
   }));
-  const projectionData = buildProjectionData(metrics.monthlyIncome, metrics.totalExpenses);
-  const incomeExpData = buildIncomeVsExpenses(metrics.monthlyIncome, metrics.totalExpenses);
+  const projectionData = buildProjectionData(metrics.monthlyIncome, metrics.totalExpenses, locale);
+  const incomeExpData = buildIncomeVsExpenses(metrics.monthlyIncome, metrics.totalExpenses, locale);
 
   return (
     <div className="card" style={{ padding: "1.5rem" }}>
@@ -131,13 +136,13 @@ export default function FinanceCharts({ profile }: Props) {
       </div>
 
       {/* Charts */}
-      <div role="tabpanel" aria-label={TABS.find(t => t.id === activeTab)?.label}>
+      <div role="tabpanel" aria-label={TABS.find(tab => tab.id === activeTab)?.label}>
 
         {/* Spending breakdown */}
         {activeTab === "spending" && (
           <div>
             <h3 className="text-sm font-semibold mb-4" style={{ color: "var(--color-text-secondary)" }}>
-              Monthly spending breakdown
+              {t("headingSpending")}
             </h3>
             <div className="grid md:grid-cols-2 gap-6 items-center mb-6">
               <ResponsiveContainer width="100%" height={220}>
@@ -147,7 +152,7 @@ export default function FinanceCharts({ profile }: Props) {
                       <Cell key={i} fill={COLORS[i % COLORS.length]} stroke="var(--color-bg)" strokeWidth={2} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(v: number) => [`$${v}`, "Amount"]} contentStyle={tooltipStyle} wrapperStyle={tooltipWrapperStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={cursorStyle} />
+                  <Tooltip formatter={(v: number) => [`$${v}`, t("tooltipAmount")]} contentStyle={tooltipStyle} wrapperStyle={tooltipWrapperStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={cursorStyle} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="flex flex-col gap-2">
@@ -174,7 +179,7 @@ export default function FinanceCharts({ profile }: Props) {
                 }}
               >
                 <h3 className="text-sm font-semibold mb-4" style={{ color: "var(--color-text-secondary)" }}>
-                  You vs. National Average
+                  {t("headingBenchmark")}
                 </h3>
                 <ResponsiveContainer width="100%" height={benchmarkComparison.length * 52 + 20}>
                   <BarChart data={benchmarkComparison} layout="vertical" barSize={14} barGap={3}>
@@ -203,12 +208,12 @@ export default function FinanceCharts({ profile }: Props) {
                       cursor={cursorStyle}
                     />
                     <Legend formatter={v => <span style={{ color: "var(--color-text-secondary)", fontSize: "12px" }}>{v}</span>} />
-                    <Bar dataKey="you" name="Your spend" fill="#3b82f6" radius={[0, 4, 4, 0]} />
-                    <Bar dataKey="average" name="US average" fill="var(--color-border-strong)" radius={[0, 4, 4, 0]} opacity={0.7} />
+                    <Bar dataKey="you" name={t("seriesYourSpend")} fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                    <Bar dataKey="average" name={t("seriesUsAverage")} fill="var(--color-border-strong)" radius={[0, 4, 4, 0]} opacity={0.7} />
                   </BarChart>
                 </ResponsiveContainer>
                 <p className="text-xs mt-2" style={{ color: "var(--color-text-muted)" }}>
-                  Source: US Bureau of Labor Statistics Consumer Expenditure Survey 2022
+                  {t("blsSource")}
                 </p>
               </div>
             )}
@@ -219,7 +224,7 @@ export default function FinanceCharts({ profile }: Props) {
         {activeTab === "income-vs-expenses" && (
           <div>
             <h3 className="text-sm font-semibold mb-4" style={{ color: "var(--color-text-secondary)" }}>
-              Income vs expenses (last 6 months — estimated)
+              {t("headingIncomeExpenses")}
             </h3>
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={incomeExpData} barGap={4}>
@@ -228,8 +233,8 @@ export default function FinanceCharts({ profile }: Props) {
                 <YAxis tickFormatter={formatK} tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, ""]} contentStyle={tooltipStyle} wrapperStyle={tooltipWrapperStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={cursorStyle} />
                 <Legend formatter={v => <span style={{ color: "var(--color-text-secondary)", fontSize: "12px" }}>{v}</span>} />
-                <Bar dataKey="income" name="Income" fill="#00d37f" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="expenses" name="Expenses" fill="#ef4444" radius={[4, 4, 0, 0]} opacity={0.8} />
+                <Bar dataKey="income" name={t("seriesIncome")} fill="#00d37f" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="expenses" name={t("seriesExpenses")} fill="#ef4444" radius={[4, 4, 0, 0]} opacity={0.8} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -239,10 +244,10 @@ export default function FinanceCharts({ profile }: Props) {
         {activeTab === "goal-progress" && (
           <div>
             <h3 className="text-sm font-semibold mb-4" style={{ color: "var(--color-text-secondary)" }}>
-              Goal progress
+              {t("headingGoalProgress")}
             </h3>
             {goalData.length === 0 ? (
-              <p className="text-sm text-center py-8" style={{ color: "var(--color-text-muted)" }}>No goals set yet.</p>
+              <p className="text-sm text-center py-8" style={{ color: "var(--color-text-muted)" }}>{t("noGoals")}</p>
             ) : (
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={goalData} layout="vertical" barSize={16}>
@@ -250,8 +255,8 @@ export default function FinanceCharts({ profile }: Props) {
                   <XAxis type="number" tickFormatter={formatK} tick={{ fill: "var(--color-text-muted)", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis type="category" dataKey="name" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} axisLine={false} tickLine={false} width={90} />
                   <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, ""]} contentStyle={tooltipStyle} wrapperStyle={tooltipWrapperStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={cursorStyle} />
-                  <Bar dataKey="saved" name="Saved" stackId="a" fill="#00d37f" radius={[0, 0, 0, 4]} />
-                  <Bar dataKey="remaining" name="Remaining" stackId="a" fill="var(--color-border)" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="saved" name={t("seriesSaved")} stackId="a" fill="#00d37f" radius={[0, 0, 0, 4]} />
+                  <Bar dataKey="remaining" name={t("seriesRemaining")} stackId="a" fill="var(--color-border)" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -262,7 +267,7 @@ export default function FinanceCharts({ profile }: Props) {
         {activeTab === "projection" && (
           <div>
             <h3 className="text-sm font-semibold mb-4" style={{ color: "var(--color-text-secondary)" }}>
-              Projected savings over next 12 months
+              {t("headingProjection")}
             </h3>
             <ResponsiveContainer width="100%" height={260}>
               <AreaChart data={projectionData}>
@@ -275,12 +280,12 @@ export default function FinanceCharts({ profile }: Props) {
                 <CartesianGrid vertical={false} stroke="var(--color-border)" />
                 <XAxis dataKey="month" tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tickFormatter={formatK} tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} axisLine={false} tickLine={false} />
-                <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, "Cumulative savings"]} contentStyle={tooltipStyle} wrapperStyle={tooltipWrapperStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={cursorStyle} />
+                <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, t("seriesCumulativeSavings")]} contentStyle={tooltipStyle} wrapperStyle={tooltipWrapperStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} cursor={cursorStyle} />
                 <Area type="monotone" dataKey="savings" stroke="#00d37f" strokeWidth={2.5} fill="url(#savingsGrad)" dot={false} />
               </AreaChart>
             </ResponsiveContainer>
             <p className="text-xs mt-3 text-center" style={{ color: "var(--color-text-muted)" }}>
-              Based on your current monthly surplus of ${Math.max(metrics.monthlySurplus, 0).toLocaleString()}
+              {t("basedOnSurplus", { amount: `$${Math.max(metrics.monthlySurplus, 0).toLocaleString()}` })}
             </p>
           </div>
         )}

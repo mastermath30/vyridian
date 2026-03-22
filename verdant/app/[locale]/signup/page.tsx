@@ -2,22 +2,25 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/authContext";
 import Navbar from "@/components/layout/Navbar";
+import { VyridianWordmark } from "@/components/ui/Logo";
 import { Eye, EyeOff, ArrowRight, CheckCircle } from "lucide-react";
 
 export default function SignupPage() {
   const { user, loading: authLoading, refetch } = useAuth();
   const router = useRouter();
   const { locale } = useParams<{ locale: string }>();
+  const searchParams = useSearchParams();
+  const nextUrl = searchParams.get("next");
 
-  // Redirect already-authenticated users straight to dashboard
+  // Redirect already-authenticated users to ?next or dashboard
   useEffect(() => {
     if (!authLoading && user) {
-      router.replace(`/${locale}/dashboard`);
+      router.replace(nextUrl ?? `/${locale}/dashboard`);
     }
-  }, [authLoading, user, locale, router]);
+  }, [authLoading, user, locale, router, nextUrl]);
 
   const [form, setForm] = useState({
     firstName: "", lastName: "", username: "",
@@ -67,12 +70,27 @@ export default function SignupPage() {
           confirmPassword: form.confirmPassword,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) { setError(data.error || "Signup failed."); return; }
+
+      let data: { error?: string; success?: boolean } = {};
+      try {
+        data = await res.json();
+      } catch {
+        // Server returned a non-JSON response (HTML error page, gateway error, etc.)
+        console.error("[signup] Non-JSON response from server, status:", res.status);
+        setError("Server error — please try again. If this persists, contact support.");
+        return;
+      }
+
+      if (!res.ok) {
+        setError(data.error || "Signup failed. Please try again.");
+        return;
+      }
+
       await refetch();
-      router.push(`/${locale}/dashboard`);
-    } catch {
-      setError("Something went wrong. Please try again.");
+      router.push(nextUrl ?? `/${locale}/dashboard`);
+    } catch (err) {
+      console.error("[signup] Unexpected error:", err);
+      setError("Could not reach the server. Check your connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -94,12 +112,8 @@ export default function SignupPage() {
           className="hidden lg:flex flex-col justify-center px-16 py-20 flex-1"
           style={{ background: "var(--color-bg-alt)", borderRight: "1px solid var(--color-border)" }}
         >
-          <Link href={`/${locale}`} className="flex items-center gap-2.5 mb-14">
-            <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-              <rect width="32" height="32" rx="9" fill="#00d47f" />
-              <path d="M8 9.5L16 22.5L24 9.5" stroke="#000" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span className="text-xl font-bold" style={{ color: "var(--color-text-primary)", letterSpacing: "-0.025em" }}>Vyridian</span>
+          <Link href={`/${locale}`} className="mb-14 inline-block" style={{ textDecoration: "none" }}>
+            <VyridianWordmark size={30} />
           </Link>
           <h2 className="display-md mb-4" style={{ color: "var(--color-text-primary)" }}>
             Take control of your finances

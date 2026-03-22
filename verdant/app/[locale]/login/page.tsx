@@ -2,22 +2,25 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/authContext";
 import Navbar from "@/components/layout/Navbar";
+import { VyridianWordmark } from "@/components/ui/Logo";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const { user, loading: authLoading, refetch } = useAuth();
   const router = useRouter();
   const { locale } = useParams<{ locale: string }>();
+  const searchParams = useSearchParams();
+  const nextUrl = searchParams.get("next");
 
-  // Redirect already-authenticated users straight to dashboard
+  // Redirect already-authenticated users to ?next or dashboard
   useEffect(() => {
     if (!authLoading && user) {
-      router.replace(`/${locale}/dashboard`);
+      router.replace(nextUrl ?? `/${locale}/dashboard`);
     }
-  }, [authLoading, user, locale, router]);
+  }, [authLoading, user, locale, router, nextUrl]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,12 +39,27 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
-      if (!res.ok) { setError(data.error || "Login failed."); return; }
+
+      let data: { error?: string; success?: boolean; user?: unknown } = {};
+      try {
+        data = await res.json();
+      } catch {
+        // Server returned a non-JSON response (HTML error page, gateway error, etc.)
+        console.error("[login] Non-JSON response from server, status:", res.status);
+        setError("Server error — please try again. If this persists, contact support.");
+        return;
+      }
+
+      if (!res.ok) {
+        setError(data.error || "Login failed. Please check your credentials and try again.");
+        return;
+      }
+
       await refetch();
-      router.push(`/${locale}/dashboard`);
-    } catch {
-      setError("Something went wrong. Please try again.");
+      router.push(nextUrl ?? `/${locale}/dashboard`);
+    } catch (err) {
+      console.error("[login] Unexpected error:", err);
+      setError("Could not reach the server. Check your connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -52,12 +70,10 @@ export default function LoginPage() {
       <Navbar />
       <main className="flex min-h-screen items-center justify-center pt-16 px-6">
         <div className="w-full max-w-md py-16">
-          <div className="flex items-center gap-2.5 mb-10">
-            <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-              <rect width="32" height="32" rx="9" fill="#00d47f" />
-              <path d="M8 9.5L16 22.5L24 9.5" stroke="#000" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span className="text-xl font-bold" style={{ color: "var(--color-text-primary)", letterSpacing: "-0.025em" }}>Vyridian</span>
+          <div className="mb-10">
+            <Link href={`/${locale}`} style={{ textDecoration: "none" }}>
+              <VyridianWordmark size={30} />
+            </Link>
           </div>
 
           <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--color-text-primary)", letterSpacing: "-0.02em" }}>

@@ -8,38 +8,13 @@ import { useApp } from "@/lib/context";
 import type { Locale } from "@/types";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { VyridianMark } from "@/components/ui/Logo";
 
 const LOCALES: { value: Locale; label: string }[] = [
   { value: "en", label: "EN" },
   { value: "es", label: "ES" },
   { value: "fr", label: "FR" },
 ];
-
-// Vyridian wordmark SVG — a subtle geometric leaf/V mark
-function VyridianMark({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <rect width="32" height="32" rx="9" fill="#00d47f" />
-      <path
-        d="M8 9.5L16 22.5L24 9.5"
-        stroke="#000"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path
-        d="M12 9.5L16 16.5L20 9.5"
-        stroke="#000"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-        opacity="0.45"
-      />
-    </svg>
-  );
-}
 
 export default function Navbar() {
   const { user, logout } = useAuth();

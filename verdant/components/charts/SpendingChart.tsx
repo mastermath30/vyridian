@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   PieChart,
   Pie,
@@ -26,6 +27,7 @@ const CHART_COLORS = [
 ];
 
 export default function SpendingChart({ expenses }: SpendingChartProps) {
+  const t = useTranslations("charts");
   const data = expenses.map((e) => ({ name: e.name, value: e.monthlyEstimate }));
 
   return (
@@ -80,13 +82,13 @@ export default function SpendingChart({ expenses }: SpendingChartProps) {
           className="text-xs cursor-pointer"
           style={{ color: "var(--color-text-muted)" }}
         >
-          View as table
+          {t("viewAsTable")}
         </summary>
         <table className="w-full mt-2 text-sm" aria-label="Spending breakdown data table">
           <thead>
             <tr style={{ color: "var(--color-text-muted)" }}>
-              <th className="text-left py-1 font-medium">Category</th>
-              <th className="text-right py-1 font-medium">Amount</th>
+              <th className="text-left py-1 font-medium">{t("tableCategory")}</th>
+              <th className="text-right py-1 font-medium">{t("tableAmount")}</th>
             </tr>
           </thead>
           <tbody>
